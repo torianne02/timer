@@ -1,25 +1,55 @@
 import React, { Component } from 'react';
+import TimerForm from './TimerForm';
 
 class Timer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       timerOn: false,
-      startTime: 0,
-      countdownTime: 0,
+      startTime: '',
+      minutes: '',
+      seconds: '00',
       speed: 1,
     };
+    this.handleOnChange = this.handleOnChange.bind(this);
   }
+
+  handleOnChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+
+  handleOnSubmit = event => {
+    event.preventDefault();
+
+    if (this.validate()) {
+      this.startTimer();
+    }
+  }
+
+  validate = () => {
+    if (parseInt(this.state.startTime) > 0) {
+      return true
+    } else {
+      return alert('Make sure to enter a number that is greater than 0!')
+    }
+  }
+
+  startTimer = () => {
+
+  }
+
 
   render() {
     return (
       <div className="timer">
         <div className="timer-form">
-          {/* 
-            TimerForm component for input 
-            
-            will use handleOnChange and handleOnStart to change state
-          */}
+          <TimerForm 
+            startTimeValue={ this.state.startTime }
+            handleOnChange={ this.handleOnChange }
+            handleOnSubmit={ this.handleOnSubmit }
+          />
         </div>
         <div className="timer-message">
           {/* 
