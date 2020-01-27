@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, Form, FormGroup, Label, Input, Row } from 'reactstrap';
+import { Container, Button, Form, Label, Input } from 'reactstrap';
 
 const TimerForm = props => {
   return (
