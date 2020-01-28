@@ -7,7 +7,7 @@ class Timer extends Component {
     this.state = {
       timerOn: false,
       startTime: '',
-      minutes: '',
+      minutes: '00',
       seconds: '00',
       speed: 1,
     };
@@ -22,24 +22,63 @@ class Timer extends Component {
 
   handleOnSubmit = event => {
     event.preventDefault();
+    console.log("HERE (SUBMIT)")
 
     if (this.validate()) {
-      this.startTimer();
+      this.beginTimer();
     }
   }
 
   validate = () => {
-    if (parseInt(this.state.startTime) > 0) {
+    console.log("HERE (VALIDATION)")
+    this.convertStartTime()
+
+    if (this.state.startTime > 0) {
       return true
     } else {
       return alert('Make sure to enter a number that is greater than 0!')
     }
   }
 
-  startTimer = () => {
-
+  convertStartTime = () => {
+    console.log("HERE (CONVERTER)")
+    let time = parseInt(this.state.startTime)
+    this.setState({
+      startTime: time,
+      minutes: time,
+    })
   }
 
+  beginTimer = () => {
+    this.setState({
+      timerOn: true,
+    })
+
+    const countdown = setInterval(function() {
+      this.updateCounter()
+    }, 1000)
+
+    this.setState({
+      countdown
+    })
+  }
+
+  updateCounter = () => {
+    let sec = parseInt(this.state.seconds)
+    let min = this.state.minutes
+
+    if (sec <= 0) {
+      min -= 1
+      sec = 59
+    }
+
+    sec -= 1
+
+    this.setState({
+      minutes: min,
+      seconds: sec,
+    })
+  }
 
   render() {
     return (
@@ -59,6 +98,7 @@ class Timer extends Component {
           */}
         </div>
         <div className="timer-text">
+          { this.state.minutes } : { this.state.seconds }
           {/* 
             TimerText component to display 00:00 countdown
             this text will change color/blink 
