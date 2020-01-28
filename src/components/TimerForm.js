@@ -4,10 +4,10 @@ import { Container, Button, Form, Label, Input } from 'reactstrap';
 const TimerForm = props => {
   return (
     <Container className="form">
-      <Form onSubmit={ props.handleOnStart }>
-        <Label for="start-time">Countdown: </Label>
+      <Form onSubmit={ props.handleOnSubmit }>
+        <Label for="startTime">Countdown: </Label>
         <Input type="text"
-          name="start-time"
+          name="startTime"
           onChange={ props.handleOnChange }
           value={ props.startTime } />
         <Button>Start</Button>
