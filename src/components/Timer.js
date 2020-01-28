@@ -21,11 +21,24 @@ class Timer extends Component {
     })
   }
 
+  // will need different onClick handlers - pause and resume
+  // OR can check innerHTML text of button and have conditional
+  // still need logic to pause timer
+  handleOnClick = event => {
+    this.setState({
+      timerOn: false,
+    })
+  }
+
   handleOnSubmit = event => {
     event.preventDefault();
     console.log("HERE (SUBMIT)")
 
     if (this.validate()) {
+      this.setState({
+        timerOn: true,
+      })
+
       this.beginTimer();
     }
   }
@@ -51,17 +64,15 @@ class Timer extends Component {
   }
 
   beginTimer = () => {
-    this.setState({
-      timerOn: true,
-    })
-
-    const countdown = setInterval(function() {
-      this.updateCounter()
-    }, 1000)
-
-    this.setState({
-      countdown
-    })
+    if (this.state.timerOn === true) {
+      const countdown = setInterval(function() {
+        this.updateCounter()
+      }, 1000)
+  
+      this.setState({
+        countdown
+      })
+    }
   }
 
   updateCounter = () => {
@@ -102,14 +113,9 @@ class Timer extends Component {
           <TimerText
             minutes={ this.state.minutes }
             seconds={ this.state.seconds } 
+            handleOnClick={ this.handleOnClick }
           />
-          {/* { this.state.minutes } : { this.state.seconds } */}
           {/* 
-            TimerText component to display 00:00 countdown
-            this text will change color/blink 
-
-            will house pause button
-
             will use handleOnPause to change state (pause timer)
           */}
         </div>
