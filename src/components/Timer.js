@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TimerForm from './TimerForm';
+import TimerText from './TimerText';
 
 class Timer extends Component {
   constructor(props) {
@@ -98,7 +99,11 @@ class Timer extends Component {
           */}
         </div>
         <div className="timer-text">
-          { this.state.minutes } : { this.state.seconds }
+          <TimerText
+            minutes={ this.state.minutes }
+            seconds={ this.state.seconds } 
+          />
+          {/* { this.state.minutes } : { this.state.seconds } */}
           {/* 
             TimerText component to display 00:00 countdown
             this text will change color/blink 
