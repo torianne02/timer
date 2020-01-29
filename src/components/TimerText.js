@@ -6,7 +6,11 @@ const TimerText = (props) =>
     <Card>
       <h1>
         { props.minutes } : { props.seconds } {' '}  
-        <Button onClick={ props.handleOnClick }>Pause</Button>
+        { props.showButton ? (
+          props.timerOn ? <Button onClick={ props.handleOnPause }>Pause</Button> : <Button onClick={ props.handleOnResume }>Resume</Button>
+        ) : (
+          null
+        )}
       </h1>
     </Card>
   </div>

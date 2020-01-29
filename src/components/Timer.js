@@ -8,10 +8,11 @@ class Timer extends Component {
     this.state = {
       timerOn: false,
       startTime: '',
-      minutes: '0',
-      seconds: '0',
+      minutes: 0,
+      seconds: 0,
       speed: 1,
       messageText: '',
+      showButton: false,
     };
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -22,43 +23,41 @@ class Timer extends Component {
     })
   }
 
-  // will need different onClick handlers - pause and resume
-  // OR can check innerHTML text of button and have conditional
-  // still need logic to pause timer
-  handleOnClick = event => {
+  handleOnPause = event => {
     this.setState({
       timerOn: false,
     })
   }
 
+  handleOnResume = event => {
+    this.setState({
+      timerOn: true,
+    })
+  }
+
   handleOnSubmit = event => {
     event.preventDefault();
+    event.target.reset();
 
     if (this.validate()) {
+      let time = parseInt(this.state.startTime)
+
       this.setState({
         timerOn: true,
-        seconds: parseInt(this.state.seconds),
+        seconds: this.state.seconds,
+        startTime: time,
+        minutes: time,
+        showButton: true,
       })
     }
   }
 
   validate = () => {
-    this.convertStartTime()
-
-    if (this.state.startTime > 0) {
+    if (parseInt(this.state.startTime) > 0) {
       return true
     } else {
       return alert('Make sure to enter a number that is greater than 0!')
     }
-  }
-
-  convertStartTime = () => {
-    let time = parseInt(this.state.startTime)
-
-    this.setState({
-      startTime: time,
-      minutes: time,
-    })
   }
 
   tick = () => {
@@ -132,11 +131,11 @@ class Timer extends Component {
           <TimerText
             minutes={ this.fixString(this.state.minutes) }
             seconds={ this.fixString(this.state.seconds) } 
-            handleOnClick={ this.handleOnClick }
+            timerOn={ this.state.timerOn }
+            showButton={ this.state.showButton }
+            handleOnPause={ this.handleOnPause }
+            handleOnResume={ this.handleOnResume }
           />
-          {/* 
-            will use handleOnPause to change state (pause timer)
-          */}
         </div>
         <div className="timer-speed">
           {/* 
