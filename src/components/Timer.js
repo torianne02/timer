@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TimerForm from './TimerForm';
 import TimerText from './TimerText';
+import TimerSpeed from './TimerSpeed';
 
 class Timer extends Component {
   constructor(props) {
@@ -10,9 +11,10 @@ class Timer extends Component {
       startTime: '',
       minutes: 0,
       seconds: 0,
-      speed: 1,
+      speed: 1000,
       messageText: '',
       showButton: false,
+      changeSpeed: false,
     };
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -32,6 +34,33 @@ class Timer extends Component {
   handleOnResume = event => {
     this.setState({
       timerOn: true,
+    })
+  }
+
+  handleOnNormalSpeed = event => {
+    this.startInterval()
+
+    this.setState({
+      speed: 1000,
+      changeSpeed: true,
+    })
+  }
+
+  handleOnMediumSpeed = event => {
+    this.startInterval()
+
+    this.setState({
+      speed: 1500,
+      changeSpeed: true,
+    })
+  }
+
+  handleOnHighSpeed = event => {
+    this.startInterval()
+    
+    this.setState({
+      speed: 2000,
+      changeSpeed: true,
     })
   }
 
@@ -106,8 +135,19 @@ class Timer extends Component {
     }
   }
 
+  startInterval = () => {
+    // this is acting really odd - when 1.5 or 2 is clicked it goes fast and then lags
+    if (this.state.changeSpeed) {
+      clearInterval(this.timerID);
+
+      this.timerID = setInterval(() => this.tick(), this.state.speed)
+    } else {
+      this.timerID = setInterval(() => this.tick(), this.state.speed)
+    }
+  }
+
   componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 1000)
+    this.startInterval()
   }
 
   componentWillUnmount() {
@@ -124,26 +164,25 @@ class Timer extends Component {
             handleOnSubmit={ this.handleOnSubmit }
           />
         </div>
+
         <div className="timer-message">
           { this.state.messageText }
         </div>
-        <div className="timer-text">
-          <TimerText
-            minutes={ this.fixString(this.state.minutes) }
-            seconds={ this.fixString(this.state.seconds) } 
-            timerOn={ this.state.timerOn }
-            showButton={ this.state.showButton }
-            handleOnPause={ this.handleOnPause }
-            handleOnResume={ this.handleOnResume }
-          />
-        </div>
-        <div className="timer-speed">
-          {/* 
-            Speed component will house the 3 speed buttons
-            
-            will use handleOnClick to change speed
-          */}
-        </div>
+
+        <TimerText
+          minutes={ this.fixString(this.state.minutes) }
+          seconds={ this.fixString(this.state.seconds) } 
+          timerOn={ this.state.timerOn }
+          showButton={ this.state.showButton }
+          handleOnPause={ this.handleOnPause }
+          handleOnResume={ this.handleOnResume }
+        />
+
+        <TimerSpeed
+          handleOnNormalSpeed={ this.handleOnNormalSpeed }
+          handleOnMediumSpeed={ this.handleOnMediumSpeed }
+          handleOnHighSpeed={ this.handleOnHighSpeed } 
+        />
       </div>
     )
   }
