@@ -8,9 +8,10 @@ class Timer extends Component {
     this.state = {
       timerOn: false,
       startTime: '',
-      minutes: '00',
-      seconds: '00',
+      minutes: '0',
+      seconds: '0',
       speed: 1,
+      messageText: '',
     };
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -32,19 +33,16 @@ class Timer extends Component {
 
   handleOnSubmit = event => {
     event.preventDefault();
-    console.log("HERE (SUBMIT)")
 
     if (this.validate()) {
       this.setState({
         timerOn: true,
-      }) // not updating state right away
-
-      this.beginTimer();
+        seconds: parseInt(this.state.seconds),
+      })
     }
   }
 
   validate = () => {
-    console.log("HERE (VALIDATION)")
     this.convertStartTime()
 
     if (this.state.startTime > 0) {
@@ -55,59 +53,66 @@ class Timer extends Component {
   }
 
   convertStartTime = () => {
-    console.log("HERE (CONVERTER)")
     let time = parseInt(this.state.startTime)
+
     this.setState({
       startTime: time,
       minutes: time,
     })
   }
 
-  beginTimer = () => {
-    console.log("HERE (BEGIN)")
-    console.log(this.state.timerOn) // false
-    
-    // not entering
+  tick = () => {
     if (this.state.timerOn === true) {
-      console.log("HERE (BEGIN-IF)")
-      const countdown = setInterval(function() {
-        this.updateCounter()
-      }, 1000)
+      let sec = this.state.seconds
+      let min = this.state.minutes
+      let timerStatus = true
+  
+      if (sec === 0 && min !== 0) {
+        min -= 1
+        sec = 59
+      } else if (sec === 0 && min === 0) {
+        timerStatus = false
+      } else {
+        sec -= 1
+      }
   
       this.setState({
-        countdown
-      })
+        minutes: min,
+        seconds: sec,
+        timerOn: timerStatus,
+        messageText: this.updateMessage(),
+      })  
     }
   }
 
-  updateCounter = () => {
-    console.log("HERE (UPDATE)")
-    let sec = parseInt(this.state.seconds)
-    let min = this.state.minutes
+  updateMessage = () => {
+    let message;
 
-    if (sec <= 0) {
-      min -= 1
-      sec = 59
-    }
-
-    sec -= 1
-
-    this.setState({
-      minutes: min,
-      seconds: sec,
-    })
-  }
-
-  messageText = () => {
-    let message = ''
-          
-    if (this.state.startTime / 2 === this.state.minutes) {
-      message = 'More than halfway there!'
-    } else if (this.state.minutes === 0 && this.state.seconds === 0) {
-      message = 'Times up!'
+    if (this.state.startTime !== '') {
+      if ((this.state.startTime * 60) / 2 === (this.state.minutes * 60) + this.state.seconds) {
+        message = 'More than halfway there!'
+      } else if (this.state.minutes === 0 && this.state.seconds === 0) {
+        message = "Time's up!"
+      }
     }
 
     return message
+  }
+
+  fixString = (num) => {
+    if (num < 10) {
+      return `0${num}`
+    } else {
+      return num
+    }
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID)
   }
 
   render() {
@@ -121,12 +126,12 @@ class Timer extends Component {
           />
         </div>
         <div className="timer-message">
-          { this.messageText() }
+          { this.state.messageText }
         </div>
         <div className="timer-text">
           <TimerText
-            minutes={ this.state.minutes }
-            seconds={ this.state.seconds } 
+            minutes={ this.fixString(this.state.minutes) }
+            seconds={ this.fixString(this.state.seconds) } 
             handleOnClick={ this.handleOnClick }
           />
           {/* 
