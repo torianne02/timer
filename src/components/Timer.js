@@ -180,14 +180,51 @@ class Timer extends Component {
           { this.state.messageText }
         </div>
 
-        <TimerText
+        { this.state.timerOn !== false && this.state.minutes === 0 && this.state.seconds <= 20 ? (
+          <div className="red-text">
+            { this.state.seconds <= 10 ? (
+              <div className="blinker">
+                <TimerText
+                  minutes={ this.fixString(this.state.minutes) }
+                  seconds={ this.fixString(this.state.seconds) } 
+                  timerOn={ this.state.timerOn }
+                  showButton={ this.state.showButton }
+                  handleOnPause={ this.handleOnPause }
+                  handleOnResume={ this.handleOnResume }
+                />
+              </div>
+            ) : (
+              <TimerText
+                minutes={ this.fixString(this.state.minutes) }
+                seconds={ this.fixString(this.state.seconds) } 
+                timerOn={ this.state.timerOn }
+                showButton={ this.state.showButton }
+                handleOnPause={ this.handleOnPause }
+                handleOnResume={ this.handleOnResume }
+              />
+            )}
+        </div> ) : (
+        <div className="black-text">
+          <TimerText
+            minutes={ this.fixString(this.state.minutes) }
+            seconds={ this.fixString(this.state.seconds) } 
+            timerOn={ this.state.timerOn }
+            showButton={ this.state.showButton }
+            handleOnPause={ this.handleOnPause }
+            handleOnResume={ this.handleOnResume }
+          />
+        </div>          
+
+        )}
+
+        {/* <TimerText
           minutes={ this.fixString(this.state.minutes) }
           seconds={ this.fixString(this.state.seconds) } 
           timerOn={ this.state.timerOn }
           showButton={ this.state.showButton }
           handleOnPause={ this.handleOnPause }
           handleOnResume={ this.handleOnResume }
-        />
+        /> */}
 
         <TimerSpeed
           handleOnNormalSpeed={ this.handleOnNormalSpeed }

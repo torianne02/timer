@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-size: 18px;
 }
 
 .App-logo {
@@ -22,3 +23,40 @@
   color: #61dafb;
 }
 
+div.form {
+  margin: 15px;
+}
+
+div.form button {
+  margin: 0 7px;
+}
+
+div.timer-message {
+  margin: 15px;
+}
+
+div.black-text {
+  color: black;
+}
+
+div.red-text {
+  color: red;
+}
+
+div.blinker {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+button {
+  background-color: #987284;
+  color: white;
+  border-radius: 10px;
+  padding: 8px 15px; 
+  font-size: 15px;
+}
