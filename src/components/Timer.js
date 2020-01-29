@@ -37,7 +37,7 @@ class Timer extends Component {
     if (this.validate()) {
       this.setState({
         timerOn: true,
-      })
+      }) // not updating state right away
 
       this.beginTimer();
     }
@@ -64,7 +64,12 @@ class Timer extends Component {
   }
 
   beginTimer = () => {
+    console.log("HERE (BEGIN)")
+    console.log(this.state.timerOn) // false
+    
+    // not entering
     if (this.state.timerOn === true) {
+      console.log("HERE (BEGIN-IF)")
       const countdown = setInterval(function() {
         this.updateCounter()
       }, 1000)
@@ -76,6 +81,7 @@ class Timer extends Component {
   }
 
   updateCounter = () => {
+    console.log("HERE (UPDATE)")
     let sec = parseInt(this.state.seconds)
     let min = this.state.minutes
 
@@ -92,6 +98,18 @@ class Timer extends Component {
     })
   }
 
+  messageText = () => {
+    let message = ''
+          
+    if (this.state.startTime / 2 === this.state.minutes) {
+      message = 'More than halfway there!'
+    } else if (this.state.minutes === 0 && this.state.seconds === 0) {
+      message = 'Times up!'
+    }
+
+    return message
+  }
+
   render() {
     return (
       <div className="timer">
@@ -103,11 +121,7 @@ class Timer extends Component {
           />
         </div>
         <div className="timer-message">
-          {/* 
-            Message component to display "Time's up!" and "More than half way there!"
-
-            still haven't decided if I want a separate comp. for this
-          */}
+          { this.messageText() }
         </div>
         <div className="timer-text">
           <TimerText
