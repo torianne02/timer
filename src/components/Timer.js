@@ -15,6 +15,7 @@ class Timer extends Component {
       messageText: '',
       showButton: false,
       changeSpeed: false,
+      intervalID: 0,
     };
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -38,30 +39,30 @@ class Timer extends Component {
   }
 
   handleOnNormalSpeed = event => {
-    this.startInterval()
-
-    this.setState({
-      speed: 1000,
-      changeSpeed: true,
-    })
+    if (this.state.speed !== 1000) {
+      this.setState({
+        speed: 1000,
+        changeSpeed: true,
+      })
+    }
   }
 
   handleOnMediumSpeed = event => {
-    this.startInterval()
-
-    this.setState({
-      speed: 1500,
-      changeSpeed: true,
-    })
+    if (this.state.speed !== 1000/1.5 ) {
+      this.setState({
+        speed: 1000/1.5,
+        changeSpeed: true,
+      })
+    }
   }
 
   handleOnHighSpeed = event => {
-    this.startInterval()
-    
-    this.setState({
-      speed: 2000,
-      changeSpeed: true,
-    })
+    if (this.state.speed !== 1000/2) {
+      this.setState({
+        speed: 1000/2,
+        changeSpeed: true,
+      })
+    }
   }
 
   handleOnSubmit = event => {
@@ -135,23 +136,33 @@ class Timer extends Component {
     }
   }
 
-  startInterval = () => {
-    // this is acting really odd - when 1.5 or 2 is clicked it goes fast and then lags
-    if (this.state.changeSpeed) {
-      clearInterval(this.timerID);
+  changeInterval = () => {
+    clearInterval(this.state.intervalID);
 
-      this.timerID = setInterval(() => this.tick(), this.state.speed)
-    } else {
-      this.timerID = setInterval(() => this.tick(), this.state.speed)
-    }
+    let timerID = setInterval(() => this.tick(), this.state.speed)
+
+    this.setState({
+      changeSpeed: false,
+      intervalID: timerID,
+    })
   }
 
   componentDidMount() {
-    this.startInterval()
+    let timerID = setInterval(() => this.tick(), this.state.speed)
+
+    this.setState({
+      intervalID: timerID,
+    })
+  }
+
+  componentDidUpdate() {
+    if (this.state.changeSpeed) {
+      this.changeInterval()
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerID)
+    clearInterval(this.state.intervalID)
   }
 
   render() {
